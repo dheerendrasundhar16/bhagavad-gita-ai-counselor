@@ -1,0 +1,67 @@
+# ─── Python ───────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+*.pyd
+.Python
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+parts/
+var/
+sdist/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.manifest
+
+# ─── Virtual Environments ─────────────────────────────────────────────────────
+.venv/
+venv/
+ENV/
+env/
+.env.local
+.env.*.local
+
+# ─── Environment / Secrets ────────────────────────────────────────────────────
+# NEVER commit real secrets
+.env
+!.env.example
+*.pem
+*.key
+
+# ─── Streamlit ────────────────────────────────────────────────────────────────
+.streamlit/secrets.toml
+
+# ─── ChromaDB / Vector Store ──────────────────────────────────────────────────
+data/chromadb/
+data/uploads/
+
+# ─── Logs ─────────────────────────────────────────────────────────────────────
+logs/
+*.log
+
+# ─── OS Artifacts ─────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# ─── IDE ──────────────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.code-workspace
+
+# ─── Testing ──────────────────────────────────────────────────────────────────
+.pytest_cache/
+.coverage
+htmlcov/
+
+# ─── Ruff / Linting ───────────────────────────────────────────────────────────
+.ruff_cache/
+
+# ─── Node (if any tooling uses it) ────────────────────────────────────────────
+node_modules/

@@ -1,0 +1,73 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# render.yaml — Render Blueprint (Full Stack)
+#
+# Deploys TWO services from a single GitHub repository:
+#   1. gita-counselor-backend  →  FastAPI (uvicorn) on port 10000
+#   2. gita-counselor-frontend →  Streamlit on port 10000
+#
+# Usage:
+#   1. Push this repo to GitHub.
+#   2. Go to https://dashboard.render.com → New → Blueprint.
+#   3. Connect your repo — Render auto-reads this file.
+#   4. Set GEMINI_API_KEY in the backend service environment (Render dashboard).
+#
+# Docs: https://render.com/docs/blueprint-spec
+# ─────────────────────────────────────────────────────────────────────────────
+
+services:
+
+  # ── 1. FastAPI Backend ──────────────────────────────────────────────────────
+  - type: web
+    name: gita-counselor-backend
+    runtime: python
+    plan: free                       # upgrade to "starter" for persistent disk
+    region: oregon                   # change to match your preferred region
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn api.main:app --host 0.0.0.0 --port $PORT --workers 1
+    healthCheckPath: /status
+
+    envVars:
+      # ── Required: set this manually in the Render dashboard ──────────────
+      - key: GEMINI_API_KEY
+        sync: false                  # never committed to repo; set in dashboard
+
+      # ── Optional overrides ───────────────────────────────────────────────
+      - key: CHROMA_DB_PATH
+        value: ./data/chromadb
+      - key: HOST
+        value: 0.0.0.0
+      - key: PYTHONUNBUFFERED
+        value: "1"
+      - key: PYTHONDONTWRITEBYTECODE
+        value: "1"
+
+    # Persistent disk keeps ChromaDB vectors across deploys.
+    # Requires the "Starter" plan ($7/mo). Comment out on free tier.
+    # disk:
+    #   name: gita-chromadb
+    #   mountPath: /app/data
+    #   sizeGB: 1
+
+  # ── 2. Streamlit Frontend ───────────────────────────────────────────────────
+  - type: web
+    name: gita-counselor-frontend
+    runtime: python
+    plan: free
+    region: oregon                   # must match backend region for low latency
+    buildCommand: pip install streamlit requests python-dotenv
+    startCommand: >
+      streamlit run app.py
+      --server.port $PORT
+      --server.address 0.0.0.0
+      --server.headless true
+      --server.enableCORS false
+      --server.enableXsrfProtection true
+    healthCheckPath: /_stcore/health
+
+    envVars:
+      # Auto-generated after backend deploys — paste the backend's public URL.
+      # Format: https://gita-counselor-backend.onrender.com
+      - key: BACKEND_URL
+        sync: false                  # set in dashboard after backend is live
+      - key: PYTHONUNBUFFERED
+        value: "1"

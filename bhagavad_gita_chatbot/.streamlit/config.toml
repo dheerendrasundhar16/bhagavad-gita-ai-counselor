@@ -1,0 +1,23 @@
+[theme]
+# Bhagavad Gita AI Counselor — Deep Navy + Saffron Gold theme
+base = "dark"
+primaryColor        = "#FF8C00"
+backgroundColor     = "#080d1e"
+secondaryBackgroundColor = "#0e1228"
+textColor           = "#dde0f5"
+font                = "sans serif"
+
+[server]
+headless            = true
+port                = 8501
+enableCORS          = false
+enableXsrfProtection = true
+maxUploadSize       = 50
+
+[browser]
+gatherUsageStats    = false
+serverAddress       = "localhost"
+serverPort          = 8501
+
+[runner]
+magicEnabled        = true
